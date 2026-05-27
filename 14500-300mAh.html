@@ -3,9 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>电池文档 · 图片查阅</title>
+    <title>电池文档 · 信息查阅</title>
     <!-- 所有样式和脚本都放在 body 之后，此处仅保留必要 meta -->
 </head>
+<script>
+    // 极简脚本：定义需要展示的图片（位于同级 img/ 目录下）
+	const imgDir = 'img/14500-300';
+    // 可根据实际电池文档图片修改文件名及顺序
+    const images = [
+        "电池标签Rating label.png",          // 电池标签
+        "电池安全分析报告.jpg",         // 电池安全分析报告
+        "14500-300mAh 电池规格书.jpg",         // 电池规格书
+        "cell_datasheet.webp",       // 电芯规格书 (如有)
+        "warning_label.png"          // 安全警示标签
+    ];
+</script>
 <body>
     <!-- 极简内容容器 -->
     <div class="gallery">
@@ -126,15 +138,6 @@
     }
 </style>
 <script>
-    // 极简脚本：定义需要展示的图片（位于同级 img/ 目录下）
-    // 可根据实际电池文档图片修改文件名及顺序
-    const images = [
-        "电池标签Rating label.png",          // 电池标签
-        "电池安全分析报告.jpg",         // 电池安全分析报告
-        //"cell_datasheet.webp",       // 电芯规格书 (如有)
-        //"warning_label.png",          // 安全警示标签
-        "14500-300mAh 电池规格书.jpg"         // 电池规格书
-    ];
 
     // 容器
     const container = document.getElementById('imageList');
@@ -148,7 +151,7 @@
     } else {
         // 循环创建图片卡片
         images.forEach((filename, idx) => {
-            const imgPath = `img/${filename}`;
+            const imgPath = imgDir + `/${filename}`;
             const card = document.createElement('div');
             card.className = 'img-card';
 
