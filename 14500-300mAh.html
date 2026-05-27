@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>电池文档 · 图片查阅</title>
+    <!-- 所有样式和脚本都放在 body 之后，此处仅保留必要 meta -->
+</head>
+<body>
+    <!-- 极简内容容器 -->
+    <div class="gallery">
+        <div class="header">
+            <h1>🔋 14500-300mAh 电池</h1>
+            <p>规格说明 · 安全报告 · 产品标签</p>
+        </div>
+        <div class="image-list" id="imageList">
+            <!-- 动态加载图片 -->
+            <div class="loading-hint">加载中...</div>
+        </div>
+        <div class="footer">
+            📱 移动端适配 | 图片竖排展示
+        </div>
+    </div>
+</body>
+<!-- 将样式与脚本放在 body 之后，精简且符合要求 -->
+<style>
+    /* 极简重置 + 移动端舒适布局 */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: #f4f7fc;
+        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        padding: 20px 16px 40px;
+        min-height: 100vh;
+    }
+
+    .gallery {
+        max-width: 620px;
+        margin: 0 auto;
+    }
+
+    /* 头部轻量说明 */
+    .header {
+        text-align: center;
+        margin-bottom: 24px;
+    }
+
+    .header h1 {
+        font-size: 1.7rem;
+        font-weight: 600;
+        color: #1f3b4c;
+        letter-spacing: -0.3px;
+    }
+
+    .header p {
+        font-size: 0.85rem;
+        color: #3a6b8c;
+        background: #e9f0f5;
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 30px;
+        margin-top: 8px;
+    }
+
+    /* 图片列表 垂直排列 */
+    .image-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* 每张图片卡片 — 极简圆角白底 */
+    .img-card {
+        background: white;
+        border-radius: 22px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: 0.1s ease;
+    }
+
+    .img-card img {
+        width: 100%;
+        height: auto;
+        display: block;
+        background: #fefcf5;
+    }
+
+    /* 图片加载失败时的友好占位 */
+    .error-placeholder {
+        padding: 48px 20px;
+        text-align: center;
+        background: #fff6e8;
+        color: #b85c1a;
+        font-size: 0.85rem;
+        border-radius: 22px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .error-placeholder span:first-child {
+        font-size: 2rem;
+    }
+
+    /* 底部脚注 */
+    .footer {
+        margin-top: 32px;
+        text-align: center;
+        font-size: 0.7rem;
+        color: #7f8fa4;
+        border-top: 1px solid #e2e8f0;
+        padding-top: 20px;
+    }
+
+    .loading-hint {
+        text-align: center;
+        padding: 40px;
+        color: #6c7e9e;
+        background: white;
+        border-radius: 28px;
+    }
+</style>
+<script>
+    // 极简脚本：定义需要展示的图片（位于同级 img/ 目录下）
+    // 可根据实际电池文档图片修改文件名及顺序
+    const images = [
+        "电池标签Rating label.png",          // 电池标签
+        "电池安全分析报告.jpg",         // 电池安全分析报告
+        "14500-300mAh 电池规格书.jpg",         // 电池规格书
+        "cell_datasheet.webp",       // 电芯规格书 (如有)
+        "warning_label.png"          // 安全警示标签
+    ];
+
+    // 容器
+    const container = document.getElementById('imageList');
+
+    // 清空 loading 占位
+    container.innerHTML = '';
+
+    // 如果没有配置图片，展示提示
+    if (!images || images.length === 0) {
+        container.innerHTML = `<div class="error-placeholder" style="background:#f9f3e3;">📂 暂无图片<br><span style="font-size:12px;">请在 images 数组中添加文件名</span></div>`;
+    } else {
+        // 循环创建图片卡片
+        images.forEach((filename, idx) => {
+            const imgPath = `img/${filename}`;
+            const card = document.createElement('div');
+            card.className = 'img-card';
+
+            const img = document.createElement('img');
+            img.src = imgPath;
+            img.alt = `电池资料图 ${idx+1}: ${filename}`;
+            img.loading = 'lazy';   // 懒加载优化
+
+            // 图片加载失败时，替换为友好错误提示（不破坏布局）
+            img.onerror = function() {
+                // 创建占位容器代替 img
+                const placeholder = document.createElement('div');
+                placeholder.className = 'error-placeholder';
+                placeholder.innerHTML = `
+                    <span>🔋</span>
+                    <span>图片无法加载</span>
+                    <span style="font-size:0.7rem;">${filename}</span>
+                    <span style="font-size:0.6rem;">请检查 img/ 目录下是否存在该文件</span>
+                `;
+                card.innerHTML = '';
+                card.appendChild(placeholder);
+            };
+
+            card.appendChild(img);
+            container.appendChild(card);
+        });
+    }
+
+    // 控制台输出友好提示（移动端不干扰）
+    console.log(`📄 页面已加载，尝试展示 ${images.length} 张电池相关图片，路径为 ./img/ 目录`);
+</script>
+</html>
